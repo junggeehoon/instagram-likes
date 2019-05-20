@@ -7,7 +7,7 @@ const INSTAGRAM = 'https://www.instagram.com'; // Instagram account url
 const scrapeImgUrls = async () => {
   try {
     const browser = await puppeteer.launch({
-      headless: false
+      headless: true
     });
 
     const page = await browser.newPage();
