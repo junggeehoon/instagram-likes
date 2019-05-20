@@ -1,7 +1,6 @@
-const path = require('path');
 const puppeteer = require('puppeteer');
 const config = require('./config');
-let count = 0;
+let likes = 0;
 
 const INSTAGRAM = 'https://www.instagram.com'; // Instagram account url
 
@@ -17,8 +16,9 @@ const scrapeImgUrls = async () => {
       height: 720
     });
 
-    // console.log('🌎  Visiting web page...');
+    console.log('🌎  Visiting web page...');
     await page.goto(INSTAGRAM);
+    console.log('🚀  Launching...');
 
     await page.waitFor(1000);
     await page.click('#react-root > section > main > article > div.rgFsT > div:nth-child(2) > p > a');
@@ -32,6 +32,7 @@ const scrapeImgUrls = async () => {
     await page.waitForSelector('button.aOOlW.HoLwm');
     await page.click('button.aOOlW.HoLwm');
     await page.waitFor(1000);
+    console.log("🤪  Loginned to your account!");
 
     for (let j = 0; j < 5; j++) {
       const postNumber = await page.evaluate(() => {
@@ -43,17 +44,18 @@ const scrapeImgUrls = async () => {
           return inner.split('=')[2].split('>')[0];
         }, i)
         if (like === '"Like"') {
+          likes++;
           await page.click(`#react-root > section > main > section > div > div:nth-child(1) > div > article:nth-child(${i}) > div.eo2As > section.ltpMr.Slqrh > span.fr66n > button > span`);
         }
       }
       const scroll = await page.evaluate(() => {
-        return Math.round(document.body.scrollHeight/2);
+        return Math.round(document.body.scrollHeight / 2);
       })
       await page.evaluate(`window.scrollTo(0, ${scroll})`);
       await page.waitFor(1000);
     }
-
-    // return browser.close();
+    console.log(`👌  Done -- liked ${likes}posts!`);
+    return browser.close();
   } catch (err) {
     console.log(err);
   }
