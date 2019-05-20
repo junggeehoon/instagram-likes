@@ -1,92 +1,9 @@
 const path = require('path');
 const puppeteer = require('puppeteer');
-// const download = require('image-downloader');
 const config = require('./config');
 let count = 0;
 
-const IMAGE_DIRECTORY = './img'; // Relative path to directory to download images
 const INSTAGRAM = 'https://www.instagram.com'; // Instagram account url
-const NUMBER_OF_POSTS = 10; // Number of post that you want to save
-
-const downloadImg = async (options = {}) => {
-  try {
-    const {
-      filename,
-      image
-    } = await download.image(options);
-    console.log('⬇️  ', path.basename(filename));
-  } catch (err) {
-    console.log(err);
-  }
-}
-
-const scrape = async page => {
-  try {
-    await page.click('div._2z6nI > article > div:nth-child(1) > div > div:nth-child(1) > div:nth-child(1) > a > div.eLAPa > div._9AhH0');
-    await page.waitFor(600);
-    for (let i = 0; i < NUMBER_OF_POSTS; i++) {
-      await page.waitFor(400);
-      let nextBtn = await page.evaluate("document.querySelector('.coreSpriteRightChevron')");
-      let imageNumber = 1;
-
-      if (nextBtn !== undefined) {
-        // Case of single image post
-        const imgs = await page.evaluate(() => {
-          const elements = document.querySelectorAll('div._97aPb IMG');
-          return [...elements].map(el => el.src);
-        });
-
-        await Promise.all(imgs.map(async file => {
-          await downloadImg({
-            url: file,
-            dest: `${IMAGE_DIRECTORY}/${Date.now()}.jpg`
-          });
-        }));
-      } else {
-        // Case of multiple image post
-        while (nextBtn === undefined) {
-          // Save images from post while next button exist
-          const imgs = await page.evaluate(imageNumber => {
-            const elements = document.querySelectorAll(`div.MreMs > div > ul > li:nth-child(${imageNumber}) IMG`);
-            return [...elements].map(el => el.src);
-          }, imageNumber);
-
-          await Promise.all(imgs.map(async file => {
-            await downloadImg({
-              url: file,
-              dest: `${IMAGE_DIRECTORY}/${Date.now()}.jpg`
-            });
-          }));
-
-          imageNumber++;
-          await page.click('.coreSpriteRightChevron');
-          nextBtn = await page.evaluate("document.querySelector('.coreSpriteRightChevron')");
-        }
-        // Save last image from post
-        const imgs = await page.evaluate(imageNumber => {
-          const elements = document.querySelectorAll(`div.MreMs > div > ul > li:nth-child(${imageNumber}) IMG`);
-          return [...elements].map(el => el.src);
-        }, imageNumber);
-
-        await Promise.all(imgs.map(async file => {
-          await downloadImg({
-            url: file,
-            dest: `${IMAGE_DIRECTORY}/${Date.now()}.jpg`
-          });
-        }));
-      }
-
-      count += imageNumber;
-      if (i !== NUMBER_OF_POSTS - 1) {
-        await page.click('.coreSpriteRightPaginationArrow');
-        await page.waitFor(400);
-      }
-    }
-  } catch (err) {
-    console.log(err);
-  }
-  return;
-}
 
 const scrapeImgUrls = async () => {
   try {
