@@ -1,6 +1,6 @@
 # instagram-likes
 
-Programs that press likes of user's posts
+Programs that press likes user's posts
 
 ## Installation and Running
 > Requires Node v7.6 or above
