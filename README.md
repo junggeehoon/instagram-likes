@@ -1,13 +1,13 @@
 # instagram-likes
 
-Robot that automatically save all images from instragram
+Programs that press likes of user's posts
 
 ## Installation and Running
 > Requires Node v7.6 or above
 
 1. Clone the repo
 ```
-$ git clone https://github.com/junggeehoon/instagram-saver
+$ git clone https://github.com/junggeehoon/instagram-likes
 ```
 2. Install dependencies
 ```
