@@ -7,7 +7,7 @@ const INSTAGRAM = 'https://www.instagram.com'; // Instagram account url
 const pressLike = async () => {
   try {
     const browser = await puppeteer.launch({
-      headless: false
+      headless: true
     });
 
     const page = await browser.newPage();
@@ -17,6 +17,7 @@ const pressLike = async () => {
     });
 
     console.log('🌎  Visiting web page...');
+    const time1 = Date.now();
     await page.goto(INSTAGRAM);
     console.log('🚀  Launching...');
 
@@ -28,12 +29,12 @@ const pressLike = async () => {
     await page.click('#react-root > section > main > div > article > div > div:nth-child(1) > div > form > div:nth-child(4) > button'); // click login button
 
     await page.waitFor(1000);
-    // await page.waitForSelector('button.aOOlW.HoLwm');
-    // await page.click('button.aOOlW.HoLwm');
-    // await page.waitFor(1000);
+    await page.waitForSelector('button.aOOlW.HoLwm');
+    await page.click('button.aOOlW.HoLwm');
+    await page.waitFor(1000);
     console.log("🤪  Loginned to your account!");
 
-    for (let j = 0; j < 7; j++) {
+    for (let j = 0; j < 10; j++) {
       const postNumber = await page.evaluate(() => {
         return document.querySelectorAll(`#react-root > section > main > section > div.cGcGK > div:nth-child(1) > div > article`).length;
       })
@@ -48,12 +49,27 @@ const pressLike = async () => {
         }
       }
       const scroll = await page.evaluate(() => {
-        return Math.round(document.body.scrollHeight / 2);
+        return Math.round(document.body.scrollHeight / 1.5);
       })
       await page.evaluate(`window.scrollTo(0, ${scroll})`);
-      await page.waitFor(1000);
+      await page.waitFor(2000);
     }
+    const time2 = Date.now();
     console.log(`👌  Done -- liked ${likes}posts!`);
+    let timeTake = time2 - time1;
+    let unit = 'milliseconds';
+
+    if (timeTake >= 60000) {
+      timeTake = Math.round(timeTake / 60000);
+      unit = 'minutes';
+    }
+    
+    if (timeTake >= 1000) {
+      timeTake = Math.round(timeTake / 1000);
+      unit = 'seconds';
+    }
+
+    console.log(`✨  Done in ${timeTake} ${unit}.`);
     return browser.close();
   } catch (err) {
     console.log(err);
