@@ -29,9 +29,9 @@ const pressLike = async () => {
     await page.click('#react-root > section > main > div > article > div > div:nth-child(1) > div > form > div:nth-child(4) > button'); // click login button
 
     await page.waitFor(1000);
-    await page.waitForSelector('button.aOOlW.HoLwm');
-    await page.click('button.aOOlW.HoLwm');
-    await page.waitFor(1000);
+    // await page.waitForSelector('button.aOOlW.HoLwm');
+    // await page.click('button.aOOlW.HoLwm');
+    // await page.waitFor(1000);
     console.log("🤪  Loginned to your account!");
 
     for (let j = 0; j < 10; j++) {
