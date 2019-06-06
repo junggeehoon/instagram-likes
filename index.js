@@ -37,23 +37,23 @@ const pressLike = async () => {
 
     console.log("🤪  Loginned to your account!");
 
-    for (let j = 0; j < 4; j++) {
+    for (let j = 0; j < 8; j++) {
       const postNumber = await page.evaluate(() => {
-        return document.querySelectorAll(`#react-root > section > main > section > div.cGcGK > div:nth-child(1) > div > article`).length;
+        return document.querySelectorAll(`div.cGcGK > div:nth-child(1) > div > article`).length;
       })
       for (let i = 1; i < postNumber + 1; i++) {
         const like = await page.evaluate(i => {
-          const inner = document.querySelector(`#react-root > section > main > section > div.cGcGK > div:nth-child(1) > div > article:nth-of-type(${i}) > div.eo2As > section.ltpMr.Slqrh > span.fr66n > button`).innerHTML;
+          const inner = document.querySelector(`div.cGcGK > div:nth-child(1) > div > article:nth-of-type(${i}) > div.eo2As > section.ltpMr.Slqrh > span.fr66n > button`).innerHTML;
           return inner.split('=')[2].split('>')[0];
         }, i)
 
         const following = await page.evaluate(i => {
-          return document.querySelector(`#react-root > section > main > section > div.cGcGK > div:nth-child(1) > div > article:nth-of-type(${i}) > header > div.o-MQd.z8cbW > div.RqtMr > div > h2 > a`).innerHTML;
+          return document.querySelector(`div.cGcGK > div:nth-child(1) > div > article:nth-of-type(${i}) > header > div.o-MQd.z8cbW > div.RqtMr > div > h2 > a`).innerHTML;
         }, i)
 
         if (!config.exceptions.includes(following) && like === '"Like"') {
           likes++;
-          await page.click(`#react-root > section > main > section > div > div:nth-child(1) > div > article:nth-of-type(${i}) > div.eo2As > section.ltpMr.Slqrh > span.fr66n > button > span`);
+          await page.click(`div.cGcGK > div:nth-child(1) > div > article:nth-of-type(${i}) > div.eo2As > section.ltpMr.Slqrh > span.fr66n > button > span`);
         }
       }
       const scroll = await page.evaluate(() => {
