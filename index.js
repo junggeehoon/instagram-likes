@@ -30,7 +30,7 @@ const pressLike = async () => {
 
     await page.waitFor(1000);
 
-    // Uncoment this part while running on you PC
+    // Uncomment the following line before running the sample.
     await page.waitForSelector('button.aOOlW.HoLwm');
     await page.click('button.aOOlW.HoLwm');
     await page.waitFor(1000);
@@ -41,7 +41,7 @@ const pressLike = async () => {
       const postNumber = await page.evaluate(() => {
         return document.querySelectorAll(`#react-root > section > main > section > div.cGcGK > div:nth-child(1) > div > article`).length;
       })
-      for (let i = 1; i <= postNumber; i++) {
+      for (let i = 1; i < postNumber + 1; i++) {
         const like = await page.evaluate(i => {
           const inner = document.querySelector(`#react-root > section > main > section > div.cGcGK > div:nth-child(1) > div > article:nth-of-type(${i}) > div.eo2As > section.ltpMr.Slqrh > span.fr66n > button`).innerHTML;
           return inner.split('=')[2].split('>')[0];

@@ -17,7 +17,13 @@ $ npm install
 ```javascript
 const config = {
   email: 'YOUR_INSTAGRAM_EMAIL',
-  password: 'YOUR_INSTAGRAM_PASSWORD'
+  password: 'YOUR_INSTAGRAM_PASSWORD',
+  exceptions: [
+    'Person1',
+    'Person2',
+    'Person3',
+    'Person4'
+  ]
 }
 
 module.exports = config;
