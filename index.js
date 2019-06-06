@@ -7,7 +7,7 @@ const INSTAGRAM = 'https://www.instagram.com';
 const pressLike = async () => {
   try {
     const browser = await puppeteer.launch({
-      headless: false
+      headless: true
     });
 
     const page = await browser.newPage();
@@ -23,17 +23,17 @@ const pressLike = async () => {
 
     await page.waitFor(1000);
     await page.click('#react-root > section > main > article > div.rgFsT > div:nth-child(2) > p > a'); // click login
-    await page.waitFor(1000);
+    await page.waitFor(1500);
     await page.type('input[name=username]', config.email);
     await page.type('input[name=password]', config.password);
     await page.click('button._0mzm-.sqdOP.L3NKy'); // click login button
 
     await page.waitFor(1000);
 
-    // Uncomment the following line before running the sample.
-    await page.waitForSelector('button.aOOlW.HoLwm');
-    await page.click('button.aOOlW.HoLwm');
-    await page.waitFor(1000);
+    // // Uncomment the following line before running the sample.
+    // await page.waitForSelector('button.aOOlW.HoLwm');
+    // await page.click('button.aOOlW.HoLwm');
+    // await page.waitFor(1000);
 
     console.log("🤪  Loginned to your account!");
 
@@ -60,7 +60,7 @@ const pressLike = async () => {
         return Math.round(document.body.scrollHeight * 0.6);
       })
       await page.evaluate(`window.scrollTo(0, ${scroll})`);
-      await page.waitFor(2000);
+      await page.waitFor(1500);
     }
     const time2 = Date.now();
     console.log(`👌  Done -- liked ${likes}posts!`);
@@ -84,5 +84,5 @@ const pressLike = async () => {
   }
 }
 
-// setInterval(visitHomepage, 3600000); // 1시간에 한번씩 
-pressLike();
+setInterval(visitHomepage, 3600000); // 1시간에 한번씩 
+// pressLike();
