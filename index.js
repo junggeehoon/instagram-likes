@@ -2,12 +2,12 @@ const puppeteer = require('puppeteer');
 const config = require('./config');
 let likes = 0;
 
-const INSTAGRAM = 'https://www.instagram.com'; // Instagram account url
+const INSTAGRAM = 'https://www.instagram.com';
 
 const pressLike = async () => {
   try {
     const browser = await puppeteer.launch({
-      headless: true
+      headless: false
     });
 
     const page = await browser.newPage();
@@ -26,30 +26,38 @@ const pressLike = async () => {
     await page.waitFor(1000);
     await page.type('input[name=username]', config.email);
     await page.type('input[name=password]', config.password);
-    await page.click('#react-root > section > main > div > article > div > div:nth-child(1) > div > form > div:nth-child(4) > button'); // click login button
+    await page.click('button._0mzm-.sqdOP.L3NKy'); // click login button
 
     await page.waitFor(1000);
-    // await page.waitForSelector('button.aOOlW.HoLwm');
-    // await page.click('button.aOOlW.HoLwm');
-    // await page.waitFor(1000);
+
+    // Uncoment this part while running on you PC
+    await page.waitForSelector('button.aOOlW.HoLwm');
+    await page.click('button.aOOlW.HoLwm');
+    await page.waitFor(1000);
+
     console.log("🤪  Loginned to your account!");
 
-    for (let j = 0; j < 10; j++) {
+    for (let j = 0; j < 4; j++) {
       const postNumber = await page.evaluate(() => {
         return document.querySelectorAll(`#react-root > section > main > section > div.cGcGK > div:nth-child(1) > div > article`).length;
       })
       for (let i = 1; i <= postNumber; i++) {
         const like = await page.evaluate(i => {
-          const inner = document.querySelector(`#react-root > section > main > section > div.cGcGK > div:nth-child(1) > div > article:nth-child(${i}) > div.eo2As > section.ltpMr.Slqrh > span.fr66n > button`).innerHTML;
+          const inner = document.querySelector(`#react-root > section > main > section > div.cGcGK > div:nth-child(1) > div > article:nth-of-type(${i}) > div.eo2As > section.ltpMr.Slqrh > span.fr66n > button`).innerHTML;
           return inner.split('=')[2].split('>')[0];
         }, i)
-        if (like === '"Like"') {
+
+        const following = await page.evaluate(i => {
+          return document.querySelector(`#react-root > section > main > section > div.cGcGK > div:nth-child(1) > div > article:nth-of-type(${i}) > header > div.o-MQd.z8cbW > div.RqtMr > div > h2 > a`).innerHTML;
+        }, i)
+
+        if (!config.exceptions.includes(following) && like === '"Like"') {
           likes++;
-          await page.click(`#react-root > section > main > section > div > div:nth-child(1) > div > article:nth-child(${i}) > div.eo2As > section.ltpMr.Slqrh > span.fr66n > button > span`);
+          await page.click(`#react-root > section > main > section > div > div:nth-child(1) > div > article:nth-of-type(${i}) > div.eo2As > section.ltpMr.Slqrh > span.fr66n > button > span`);
         }
       }
       const scroll = await page.evaluate(() => {
-        return Math.round(document.body.scrollHeight / 1.5);
+        return Math.round(document.body.scrollHeight * 0.6);
       })
       await page.evaluate(`window.scrollTo(0, ${scroll})`);
       await page.waitFor(2000);
