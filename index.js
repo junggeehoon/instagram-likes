@@ -7,7 +7,9 @@ const INSTAGRAM = 'https://www.instagram.com';
 const pressLike = async () => {
   try {
     const browser = await puppeteer.launch({
-      headless: true
+      headless: false,
+      userDataDir: '/Users/geehoonjung/Library/Application Support/Google/Chrome/Default',
+      executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
     });
 
     const page = await browser.newPage();
@@ -22,20 +24,6 @@ const pressLike = async () => {
     console.log('🚀  Launching...');
 
     await page.waitFor(1000);
-    await page.click('#react-root > section > main > article > div.rgFsT > div:nth-child(2) > p > a'); // click login
-    await page.waitFor(1500);
-    await page.type('input[name=username]', config.email);
-    await page.type('input[name=password]', config.password);
-    await page.click('button._0mzm-.sqdOP.L3NKy'); // click login button
-
-    await page.waitFor(1000);
-
-    // // Uncomment the following line before running the sample.
-    // await page.waitForSelector('button.aOOlW.HoLwm');
-    // await page.click('button.aOOlW.HoLwm');
-    // await page.waitFor(1000);
-
-    console.log("🤪  Loginned to your account!");
 
     for (let j = 0; j < 8; j++) {
       const postNumber = await page.evaluate(() => {
@@ -56,10 +44,8 @@ const pressLike = async () => {
           await page.click(`div.cGcGK > div:nth-child(1) > div > article:nth-of-type(${i}) > div.eo2As > section.ltpMr.Slqrh > span.fr66n > button > span`);
         }
       }
-      const scroll = await page.evaluate(() => {
-        return Math.round(document.body.scrollHeight * 0.6);
-      })
-      await page.evaluate(`window.scrollTo(0, ${scroll})`);
+
+      await page.evaluate(`window.scrollTo(0, document.body.scrollHeight)`);
       await page.waitFor(1500);
     }
     const time2 = Date.now();
@@ -84,5 +70,5 @@ const pressLike = async () => {
   }
 }
 
-setInterval(visitHomepage, 3600000); // 1시간에 한번씩 
-// pressLike();
+// setInterval(pressLike, 3600000); // 1시간에 한번씩 
+pressLike();
