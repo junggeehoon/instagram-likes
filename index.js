@@ -1,15 +1,15 @@
 const puppeteer = require('puppeteer');
 const config = require('./config');
 let likes = 0;
+let userNames = [];
 
 const INSTAGRAM = 'https://www.instagram.com';
 
 const pressLike = async () => {
   try {
     const browser = await puppeteer.launch({
-      headless: false,
-      userDataDir: '/Users/geehoonjung/Library/Application Support/Google/Chrome/Default',
-      executablePath: '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
+      // userDataDir: "./user_data",
+      headless: false
     });
 
     const page = await browser.newPage();
@@ -23,30 +23,68 @@ const pressLike = async () => {
     await page.goto(INSTAGRAM);
     console.log('🚀  Launching...');
 
+    await page.waitFor(1500);
+    const didLogin = await page.evaluate(() => {
+      return document.querySelectorAll(`input[name=username]`).length;
+    })
+
+    if (didLogin == 1) {
+      await page.type('input[name=username]', config.email);
+      await page.type('input[name=password]', config.password);
+      await page.click('#react-root > section > main > article > div:nth-of-type(2) > div:nth-of-type(1) > div > form > div:nth-of-type(4) > button');
+
+      // await page.waitFor(1500);
+      await page.waitForSelector('#react-root > section > main > div > div > div > section > div > button');
+      await page.click('#react-root > section > main > div > div > div > section > div > button');
+
+      await page.waitForSelector('button.aOOlW.HoLwm');
+      await page.click('button.aOOlW.HoLwm');
+    } 
+
     await page.waitFor(1000);
+    console.log("🤪  Loginned to your account!");
 
-    for (let j = 0; j < 8; j++) {
+    for (let j = 0; j < 10; j++) {
+      
       const postNumber = await page.evaluate(() => {
-        return document.querySelectorAll(`div.cGcGK > div:nth-child(1) > div > article`).length;
+        return document.querySelectorAll(`div.cGcGK > div:nth-of-type(2) > div > article`).length;
       })
-      for (let i = 1; i < postNumber + 1; i++) {
-        const like = await page.evaluate(i => {
-          const inner = document.querySelector(`div.cGcGK > div:nth-child(1) > div > article:nth-of-type(${i}) > div.eo2As > section.ltpMr.Slqrh > span.fr66n > button`).innerHTML;
-          return inner.split('=')[2].split('>')[0];
+      
+      for (let i = 1; i <= postNumber; i++) {
+        await page.waitForSelector(`div.cGcGK > div:nth-of-type(2) > div > article:nth-of-type(${i}) > div.eo2As > section.ltpMr.Slqrh > span.fr66n > button > svg`);
+        const doesLike = await page.evaluate(i => {
+          return document.querySelector(`div.cGcGK > div:nth-of-type(2) > div > article:nth-of-type(${i}) > div.eo2As > section.ltpMr.Slqrh > span.fr66n > button > svg`).getAttribute('aria-label');
+        }, i)
+  
+        const tag = await page.evaluate(i => {
+          return document.querySelector(`div.cGcGK > div:nth-of-type(2) > div > article:nth-of-type(${i}) > header > div:nth-of-type(2) > div > div`).firstChild.innerHTML;
         }, i)
 
-        const following = await page.evaluate(i => {
-          return document.querySelector(`div.cGcGK > div:nth-child(1) > div > article:nth-of-type(${i}) > header > div.o-MQd.z8cbW > div.RqtMr > div > h2 > a`).innerHTML;
-        }, i)
+        let userName = tag;
 
-        if (!config.exceptions.includes(following) && like === '"Like"') {
+        if (userName.includes("href=")) {
+          const regExp = /\/([^)]+)\/"/;
+          const matches = regExp.exec(tag);
+          userName = matches[1];
+        }
+        if (!userNames.includes(userName)) {
+          userNames.push(userName);
+          console.log(userName)
+        }
+  
+        if (doesLike === 'Like') {
+          console.log(`liked ${userName}'s post 💖`);
           likes++;
-          await page.click(`div.cGcGK > div:nth-child(1) > div > article:nth-of-type(${i}) > div.eo2As > section.ltpMr.Slqrh > span.fr66n > button > span`);
+          // await page.click(`div.cGcGK > div:nth-child(2) > div > article:nth-of-type(${i}) > div.eo2As > section.ltpMr.Slqrh > span.fr66n > button`);
         }
       }
-
-      await page.evaluate(`window.scrollTo(0, document.body.scrollHeight)`);
-      await page.waitFor(1500);
+  
+      const scroll = await page.evaluate(() => {
+        return Math.round(document.body.scrollHeight * 0.8);
+      })
+      await page.evaluate(`window.scrollTo(0, ${scroll})`);
+      await page.waitFor(2000);
+      
     }
     const time2 = Date.now();
     console.log(`👌  Done -- liked ${likes}posts!`);
@@ -64,7 +102,7 @@ const pressLike = async () => {
     }
 
     console.log(`✨  Done in ${timeTake} ${unit}.`);
-    return browser.close();
+    // return browser.close();
   } catch (err) {
     console.log(err);
   }

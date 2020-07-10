@@ -1,0 +1,6 @@
+2020/07/10-12:21:41.857 7e03 Reusing MANIFEST /Users/geehoonjung/Documents/javascript/instagram-likes/user_data/Default/IndexedDB/https_www.instagram.com_0.indexeddb.leveldb/MANIFEST-000001
+2020/07/10-12:21:41.858 7e03 Recovering log #3
+2020/07/10-12:21:41.863 7e03 Reusing old log /Users/geehoonjung/Documents/javascript/instagram-likes/user_data/Default/IndexedDB/https_www.instagram.com_0.indexeddb.leveldb/000003.log 
+2020/07/10-12:21:46.678 10b33 Level-0 table #5: started
+2020/07/10-12:21:46.689 10b33 Level-0 table #5: 1406854 bytes OK
+2020/07/10-12:21:46.689 10b33 Delete type=0 #3
