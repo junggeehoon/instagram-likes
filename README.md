@@ -13,17 +13,11 @@ $ git clone https://github.com/junggeehoon/instagram-likes
 ```
 $ npm install
 ```
-3. In order to login with your account, make `config.js` file inside the project folder like under:
+3. In order to login with your account, make `config.js` file inside the project folder
 ```javascript
 const config = {
-  email: 'YOUR_INSTAGRAM_EMAIL',
-  password: 'YOUR_INSTAGRAM_PASSWORD',
-  exceptions: [
-    'Person1',
-    'Person2',
-    'Person3',
-    'Person4'
-  ]
+  email: 'YOUR_INSTAGRAM_USERNAME',
+  password: 'YOUR_INSTAGRAM_PASSWORD'
 }
 
 module.exports = config;
